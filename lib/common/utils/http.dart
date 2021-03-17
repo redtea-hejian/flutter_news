@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_news/common/utils/index.dart';
 import 'package:flutter_news/common/values/index.dart';
+import 'package:flutter_news/global.dart';
 
 /*
   * http 操作类
@@ -63,6 +66,7 @@ class HttpUtil {
     // 添加拦截器
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
+      options.path += "?vno=3.5.0";
       // print("请求之前");
       // Loading.before(options.uri, '正在通讯...');
       return options; //continue
@@ -73,8 +77,23 @@ class HttpUtil {
     }, onError: (DioError e) {
       // print("错误之前");
       // Loading.complete(e.request.uri);
-      return e; //continue
+      return createErrorEntity(e);
     }));
+
+    // 加内存缓存
+    dio.interceptors.add(NetCache());
+    // 在调试模式下需要抓包调试，所以我们使用代理，并禁用HTTPS证书校验
+    if (!Global.isRelease && PROXY_ENABLE) {
+      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (client) {
+        client.findProxy = (uri) {
+          return "PROXY $PROXY_IP:$PROXY_PORT";
+        };
+        //代理工具会提供一个抓包的自签名证书，会通不过证书校验，所以我们禁用证书校验
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
+      };
+    }
   }
 
   /*
@@ -185,27 +204,51 @@ class HttpUtil {
   }
 
   /// 读取本地配置
-  Options getLocalOptions() {
-    Options options;
-    String token = StorageUtil().getItem(STORAGE_USER_TOKEN_KEY);
-    if (token != null) {
-      options = Options(headers: {
-        'Authorization': 'Bearer $token',
-      });
+  Map<String, dynamic> getAuthorizationHeader() {
+    var headers;
+    String accessToken = Global.profile.accessToken;
+    if (accessToken != null) {
+      headers = {
+        'Authorization': 'Bearer $accessToken',
+      };
     }
-    return options;
+    return headers;
   }
 
   /// restful get 操作
-  Future get(String path,
-      {dynamic params, Options options, CancelToken cancelToken}) async {
+  /// refresh 是否下拉刷新 默认 false
+  /// noCache 是否不缓存 默认 true
+  /// list 是否列表 默认 false
+  /// cacheKey 缓存key
+  Future get(
+    String path, {
+    dynamic params,
+    Options options,
+    bool refresh = false,
+    bool noCache = !CACHE_ENABLE,
+    bool list = false,
+    String cacheKey,
+  }) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
-      var response = await dio.get(path,
-          queryParameters: params,
-          options: tokenOptions,
-          cancelToken: cancelToken);
-      return jsonDecode(response.data);
+      Options requestOptions = options ?? Options();
+      requestOptions = requestOptions.merge(extra: {
+        "refresh": refresh,
+        "noCache": noCache,
+        "list": list,
+        "cacheKey": cacheKey,
+      });
+      Map<String, dynamic> _authorization = getAuthorizationHeader();
+      if (_authorization != null) {
+        requestOptions = requestOptions.merge(headers: _authorization);
+      }
+      var response = await dio.get(
+        path,
+        queryParameters: params,
+        options: requestOptions,
+        cancelToken: cancelToken,
+      );
+      return response.data;
+      // return (response.data);
     } on DioError catch (e) {
       throw createErrorEntity(e);
     }
@@ -215,10 +258,19 @@ class HttpUtil {
   Future post(String path,
       {dynamic params, Options options, CancelToken cancelToken}) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
-      var response = await dio.post(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
-      return jsonDecode(response.data);
+      Options requestOptions = options ?? Options();
+      Map<String, dynamic> _authorization = getAuthorizationHeader();
+      if (_authorization != null) {
+        requestOptions = requestOptions.merge(headers: _authorization);
+      }
+      FormData data = FormData.fromMap({'data': params});
+      var response = await dio.post(
+        path,
+        data: data,
+        options: requestOptions,
+        cancelToken: cancelToken,
+      );
+      return (response.data);
     } on DioError catch (e) {
       throw createErrorEntity(e);
     }
@@ -228,10 +280,30 @@ class HttpUtil {
   Future put(String path,
       {dynamic params, Options options, CancelToken cancelToken}) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
+      Options requestOptions = options ?? Options();
+      Map<String, dynamic> _authorization = getAuthorizationHeader();
+      if (_authorization != null) {
+        requestOptions = requestOptions.merge(headers: _authorization);
+      }
       var response = await dio.put(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
-      return jsonDecode(response.data);
+          data: params, options: requestOptions, cancelToken: cancelToken);
+      return (response.data);
+    } on DioError catch (e) {
+      throw createErrorEntity(e);
+    }
+  }
+
+  /// restful patch 操作
+  Future patch(String path, {dynamic params, Options options}) async {
+    try {
+      Options requestOptions = options ?? Options();
+      Map<String, dynamic> _authorization = getAuthorizationHeader();
+      if (_authorization != null) {
+        requestOptions = requestOptions.merge(headers: _authorization);
+      }
+      var response = await dio.patch(path,
+          data: params, options: requestOptions, cancelToken: cancelToken);
+      return (response.data);
     } on DioError catch (e) {
       throw createErrorEntity(e);
     }
@@ -241,10 +313,14 @@ class HttpUtil {
   Future delete(String path,
       {dynamic params, Options options, CancelToken cancelToken}) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
+      Options requestOptions = options ?? Options();
+      Map<String, dynamic> _authorization = getAuthorizationHeader();
+      if (_authorization != null) {
+        requestOptions = requestOptions.merge(headers: _authorization);
+      }
       var response = await dio.delete(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
-      return jsonDecode(response.data);
+          data: params, options: requestOptions, cancelToken: cancelToken);
+      return (response.data);
     } on DioError catch (e) {
       throw createErrorEntity(e);
     }
@@ -254,12 +330,16 @@ class HttpUtil {
   Future postForm(String path,
       {dynamic params, Options options, CancelToken cancelToken}) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
+      Options requestOptions = options ?? Options();
+      Map<String, dynamic> _authorization = getAuthorizationHeader();
+      if (_authorization != null) {
+        requestOptions = requestOptions.merge(headers: _authorization);
+      }
       var response = await dio.post(path,
           data: FormData.fromMap(params),
-          options: tokenOptions,
+          options: requestOptions,
           cancelToken: cancelToken);
-      return jsonDecode(response.data);
+      return (response.data);
     } on DioError catch (e) {
       throw createErrorEntity(e);
     }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news/common/api/index.dart';
+import 'package:flutter_news/common/api/news.dart';
 import 'package:flutter_news/common/type/index.dart';
+import 'package:flutter_news/common/type/news/res/getAllChannels.dart';
+import 'package:flutter_news/common/type/news/res/getListAdv.dart';
 import 'package:flutter_news/common/utils/index.dart';
 import 'package:flutter_news/common/values/index.dart';
 import 'package:flutter_news/common/widgets/index.dart';
+import 'package:flutter_news/global.dart';
 
 class SignInPage extends StatefulWidget {
   SignInPage({Key key}) : super(key: key);
@@ -28,22 +31,21 @@ class _SignInPageState extends State<SignInPage> {
 
   // 执行登录操作
   _handleSignIn() async {
-    if (!duIsEmail(_emailController.value.text)) {
-      toastInfo(msg: 'Invalid email');
-      return;
-    }
-    if (!duCheckStringLength(_passController.value.text, 6)) {
-      toastInfo(msg: 'Password length cannot be less than 6');
-      return;
-    }
-    UserLoginReq params = UserLoginReq(
-      email: _emailController.value.text,
-      password: _passController.value.text,
-    );
-    UserLoginRes result = await UserApi.login(params: params);
-    print(result.toJson());
+    // if (!duIsEmail(_emailController.value.text)) {
+    //   toastInfo(msg: 'Invalid email');
+    //   return;
+    // }
+    // if (!duCheckStringLength(_passController.value.text, 6)) {
+    //   toastInfo(msg: 'Password length cannot be less than 6');
+    //   return;
+    // }
+
+    UserLoginRes result = UserLoginRes(
+        accessToken: 'token', displayName: 'hejian', channels: ['123']);
     // 写本地 access_token , 不写全局，业务：离线登录
+    Global.saveProfile(result);
     // 全局数据 gUser
+    Navigator.pushNamed(context, '/app');
   }
 
   ///////////////////////////////
