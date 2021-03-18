@@ -12,12 +12,16 @@ import 'package:flutter_news/page/welcome/index.dart';
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',
   routes: <AutoRoute>[
-    AutoRoute(page: IndexPage, initial: true),
-    AutoRoute(page: ApplicationPage),
-    AutoRoute(page: DetailPage),
-    AutoRoute(page: SignInPage),
-    AutoRoute(page: SignUpPage),
-    AutoRoute(page: WelcomePage),
+    AutoRoute(path: '/', page: IndexPage, usesTabsRouter: true),
+    AutoRoute(
+      path: '/application',
+      page: ApplicationPage,
+      usesTabsRouter: true,
+    ),
+    AutoRoute(path: '/detail', page: DetailPage),
+    AutoRoute(path: '/signIn', page: SignInPage),
+    AutoRoute(path: '/singUp', page: SignUpPage),
+    AutoRoute(path: '/welcome', page: WelcomePage),
   ],
 )
 class $AppRouter {}

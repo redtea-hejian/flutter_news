@@ -78,17 +78,17 @@ class AppRouter extends _i1.RootStackRouter {
   @override
   List<_i1.RouteConfig> get routes => [
         _i1.RouteConfig(IndexRoute.name,
-            path: '/', fullMatch: false, usesTabsRouter: false),
+            path: '/', fullMatch: false, usesTabsRouter: true),
         _i1.RouteConfig(ApplicationRoute.name,
-            path: '/application-page', fullMatch: false, usesTabsRouter: false),
+            path: '/application', fullMatch: false, usesTabsRouter: true),
         _i1.RouteConfig(DetailRoute.name,
-            path: '/detail-page', fullMatch: false, usesTabsRouter: false),
+            path: '/detail', fullMatch: false, usesTabsRouter: false),
         _i1.RouteConfig(SignInRoute.name,
-            path: '/sign-in-page', fullMatch: false, usesTabsRouter: false),
+            path: '/signIn', fullMatch: false, usesTabsRouter: false),
         _i1.RouteConfig(SignUpRoute.name,
-            path: '/sign-up-page', fullMatch: false, usesTabsRouter: false),
+            path: '/singUp', fullMatch: false, usesTabsRouter: false),
         _i1.RouteConfig(WelcomeRoute.name,
-            path: '/welcome-page', fullMatch: false, usesTabsRouter: false)
+            path: '/welcome', fullMatch: false, usesTabsRouter: false)
       ];
 }
 
@@ -109,8 +109,7 @@ class IndexRouteArgs {
 
 class ApplicationRoute extends _i1.PageRouteInfo<ApplicationRouteArgs> {
   ApplicationRoute({this.key})
-      : super(name,
-            path: '/application-page', args: ApplicationRouteArgs(key: key));
+      : super(name, path: '/application', args: ApplicationRouteArgs(key: key));
 
   final _i8.Key key;
 
@@ -125,7 +124,7 @@ class ApplicationRouteArgs {
 
 class DetailRoute extends _i1.PageRouteInfo<DetailRouteArgs> {
   DetailRoute({this.key})
-      : super(name, path: '/detail-page', args: DetailRouteArgs(key: key));
+      : super(name, path: '/detail', args: DetailRouteArgs(key: key));
 
   final _i8.Key key;
 
@@ -140,7 +139,7 @@ class DetailRouteArgs {
 
 class SignInRoute extends _i1.PageRouteInfo<SignInRouteArgs> {
   SignInRoute({this.key})
-      : super(name, path: '/sign-in-page', args: SignInRouteArgs(key: key));
+      : super(name, path: '/signIn', args: SignInRouteArgs(key: key));
 
   final _i8.Key key;
 
@@ -155,7 +154,7 @@ class SignInRouteArgs {
 
 class SignUpRoute extends _i1.PageRouteInfo<SignUpRouteArgs> {
   SignUpRoute({this.key})
-      : super(name, path: '/sign-up-page', args: SignUpRouteArgs(key: key));
+      : super(name, path: '/singUp', args: SignUpRouteArgs(key: key));
 
   final _i8.Key key;
 
@@ -170,7 +169,7 @@ class SignUpRouteArgs {
 
 class WelcomeRoute extends _i1.PageRouteInfo<WelcomeRouteArgs> {
   WelcomeRoute({this.key})
-      : super(name, path: '/welcome-page', args: WelcomeRouteArgs(key: key));
+      : super(name, path: '/welcome', args: WelcomeRouteArgs(key: key));
 
   final _i8.Key key;
 
