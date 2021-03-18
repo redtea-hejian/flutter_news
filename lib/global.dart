@@ -11,7 +11,7 @@ class Global {
   // 用户信息
   static UserLoginRes profile = UserLoginRes(accessToken: null);
   // 是否第一次登陆
-  static bool isFirstOpen = true;
+  static bool isFirstOpen = false;
   // 是否离线登陆
   static bool isOfflineLogin = false;
   // 应用状态

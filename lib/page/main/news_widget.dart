@@ -20,7 +20,7 @@ Widget newsWidget(TypeGetListResponse news) {
 }
 
 Widget newsItemWidget(dynamic item) {
-  DateTime happen_time =
+  DateTime happenTime =
       DateTime.fromMillisecondsSinceEpoch(item['happen_time']);
   return Container(
     height: duSetHeight(161),
@@ -54,16 +54,23 @@ Widget newsItemWidget(dynamic item) {
                 ),
               ),
               // 标题
-              Container(
-                margin: EdgeInsets.only(top: duSetHeight(10)),
-                child: Text(
-                  item['news_title'],
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.primaryText,
-                    fontSize: duSetFontSize(16),
-                    height: 1.3,
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: duSetWidth(194),
+                  maxHeight: duSetHeight(122),
+                ),
+                child: Container(
+                  margin: EdgeInsets.only(top: duSetHeight(10)),
+                  child: Text(
+                    item['news_title'],
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.primaryText,
+                      fontSize: duSetFontSize(14),
+                      height: 1.3,
+                    ),
                   ),
                 ),
               ),
@@ -106,10 +113,10 @@ Widget newsItemWidget(dynamic item) {
                     ),
                     ConstrainedBox(
                       constraints: BoxConstraints(
-                        maxWidth: duSetWidth(60),
+                        maxWidth: duSetWidth(70),
                       ),
                       child: Text(
-                        '• ${duTimeLineFormat(happen_time)}',
+                        '• ${duTimeLineFormat(happenTime)}',
                         style: TextStyle(
                           fontFamily: 'Avenir',
                           fontWeight: FontWeight.normal,
@@ -117,7 +124,7 @@ Widget newsItemWidget(dynamic item) {
                           fontSize: duSetFontSize(14),
                           height: 1,
                         ),
-                        overflow: TextOverflow.clip,
+                        overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
                     ),

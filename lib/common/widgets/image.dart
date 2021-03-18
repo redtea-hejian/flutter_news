@@ -21,7 +21,15 @@ Widget imageCached({
         image: url,
         alignment: Alignment.center,
         fit: BoxFit.cover,
-        imageErrorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+        imageErrorBuilder: (context, error, stackTrace) => Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error,
+            ),
+          ],
+        ),
         fadeInDuration: Duration(seconds: 1),
       ),
     ),

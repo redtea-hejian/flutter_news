@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news/common/values/index.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 
 /// 透明背景 AppBar
 Widget transparentAppBar({
@@ -14,5 +14,11 @@ Widget transparentAppBar({
     title: title,
     leading: leading,
     actions: actions,
+  );
+}
+
+Widget cardListSkeleton() {
+  return PKCardPageSkeleton(
+    totalLines: 5,
   );
 }

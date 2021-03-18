@@ -25,3 +25,9 @@ String duTimeLineFormat(DateTime dt) {
     return str;
   }
 }
+
+String duTimeLineFormat2(DateTime dt) {
+  final dtFormat = new DateFormat('hh:mm:ss');
+  var str = dtFormat.format(dt);
+  return str;
+}

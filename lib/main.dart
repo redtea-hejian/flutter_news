@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news/common/router/index.gr.dart';
 import 'package:flutter_news/global.dart';
 import 'package:flutter_news/page/index/index.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_news/common/provider/index.dart';
 
-// void main() => Global.init().then((e) => runApp(MyApp()));
 void main() => Global.init().then(
       (e) => runApp(
         MultiProvider(
@@ -32,6 +32,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IndexPage();
+    final _appRouter = AppRouter();
+    // return IndexPage();
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      routerDelegate: _appRouter.delegate(
+        initialDeepLink: '/',
+      ),
+      routeInformationParser: _appRouter.defaultRouteParser(),
+    );
   }
 }

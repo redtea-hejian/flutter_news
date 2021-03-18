@@ -15,6 +15,16 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print('index init');
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: Size(375, 734), // 812 - 44 - 34 = 734

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news/common/api/news.dart';
 import 'package:flutter_news/common/type/index.dart';
-import 'package:flutter_news/common/type/news/res/getAllChannels.dart';
-import 'package:flutter_news/common/type/news/res/getListAdv.dart';
 import 'package:flutter_news/common/utils/index.dart';
 import 'package:flutter_news/common/values/index.dart';
 import 'package:flutter_news/common/widgets/index.dart';
