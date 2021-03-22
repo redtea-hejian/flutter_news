@@ -2,11 +2,13 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_news/common/router/application.dart';
 import 'package:flutter_news/common/router/index.dart';
+import 'package:flutter_news/common/utils/update.dart';
 import 'package:flutter_news/global.dart';
 import 'package:flutter_news/page/application/index.dart';
 import 'package:flutter_news/page/sign_in/index.dart';
 import 'package:flutter_news/page/welcome/index.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class IndexPage extends StatefulWidget {
   IndexPage({Key key}) : super(key: key);
