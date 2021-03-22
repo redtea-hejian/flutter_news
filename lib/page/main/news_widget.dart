@@ -5,13 +5,18 @@ import 'package:flutter_news/common/utils/index.dart';
 import 'package:flutter_news/common/values/index.dart';
 import 'package:flutter_news/common/widgets/image.dart';
 
-Widget newsWidget(TypeGetListResponse news) {
+Widget newsWidget(TypeGetListResponse news, Function(dynamic) onTap) {
   List list = news.toJson()['data']['list'];
   List<Widget> channels = [];
   for (var i = 0; i < list.length; i++) {
     dynamic item = list[i];
     channels.add(Column(
-      children: <Widget>[newsItemWidget(item)],
+      children: <Widget>[
+        GestureDetector(
+          child: newsItemWidget(item),
+          onTap: () => onTap(item),
+        )
+      ],
     ));
   }
   return Column(

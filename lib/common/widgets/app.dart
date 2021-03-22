@@ -22,3 +22,10 @@ Widget cardListSkeleton() {
     totalLines: 5,
   );
 }
+
+Widget cardProfileSkeleton() {
+  return PKCardProfileSkeleton(
+    isCircularImage: true,
+    isBottomLinesActive: true,
+  );
+}

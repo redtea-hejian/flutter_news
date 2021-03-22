@@ -1,27 +1,27 @@
-// @CupertinoAutoRouter
-// @AdaptiveAutoRouter
-// @CustomAutoRouter
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter_news/page/application/index.dart';
-import 'package:flutter_news/page/details/index.dart';
-import 'package:flutter_news/page/index/index.dart';
-import 'package:flutter_news/page/sign_in/index.dart';
-import 'package:flutter_news/page/sign_up/index.dart';
-import 'package:flutter_news/page/welcome/index.dart';
+import 'package:fluro/fluro.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_news/common/router/route_handlers.dart';
 
-@MaterialAutoRouter(
-  replaceInRouteName: 'Page,Route',
-  routes: <AutoRoute>[
-    AutoRoute(path: '/', page: IndexPage, usesTabsRouter: true),
-    AutoRoute(
-      path: '/application',
-      page: ApplicationPage,
-      usesTabsRouter: true,
-    ),
-    AutoRoute(path: '/detail', page: DetailPage),
-    AutoRoute(path: '/signIn', page: SignInPage),
-    AutoRoute(path: '/singUp', page: SignUpPage),
-    AutoRoute(path: '/welcome', page: WelcomePage),
-  ],
-)
-class $AppRouter {}
+class Routes {
+  static String root = '/';
+  static String signIn = '/signIn';
+  static String signUp = '/signUp';
+  static String welcome = '/welcome';
+  static String detailsPage = '/details/:id';
+  static void configureRoutes(FluroRouter router) {
+    router.notFoundHandler = Handler(
+      handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+        print("ROUTE WAS NOT FOUND !!!");
+        return;
+      },
+    );
+    router.define(root, handler: applicationHandler);
+    router.define(signIn, handler: signInHandler);
+    router.define(signUp, handler: signUpHandler);
+    router.define(welcome, handler: welcomeHandler);
+    router.define(
+      detailsPage,
+      handler: detailsHandler,
+    );
+  }
+}

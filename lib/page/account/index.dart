@@ -1,4 +1,6 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_news/common/router/application.dart';
 import 'package:flutter_news/global.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_news/common/provider/index.dart';
@@ -33,6 +35,7 @@ class _AccountPageState extends State<AccountPage> {
           },
           child: Text('灰色${appState.isGrayFilter}'),
         ),
+        Divider(),
       ],
     );
   }

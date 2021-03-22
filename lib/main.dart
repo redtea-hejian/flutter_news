@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news/common/router/index.gr.dart';
 import 'package:flutter_news/global.dart';
 import 'package:flutter_news/page/index/index.dart';
 import 'package:provider/provider.dart';
@@ -32,14 +31,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _appRouter = AppRouter();
-    // return IndexPage();
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerDelegate: _appRouter.delegate(
-        initialDeepLink: '/',
-      ),
-      routeInformationParser: _appRouter.defaultRouteParser(),
-    );
+    return IndexPage();
   }
 }

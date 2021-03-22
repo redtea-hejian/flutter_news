@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_news/common/api/news.dart';
+import 'package:flutter_news/common/provider/index.dart';
+import 'package:flutter_news/common/router/application.dart';
 import 'package:flutter_news/common/type/news/res/getAllChannels.dart';
 import 'package:flutter_news/common/type/news/res/getHotNews.dart';
 import 'package:flutter_news/common/type/news/res/getList.dart';
@@ -17,6 +19,8 @@ import 'package:flutter_news/page/main/subject_widget.dart';
 import 'package:flutter_news/page/main/news_widget.dart';
 import 'package:flutter_news/page/main/newsletters_widget.dart';
 import 'package:flutter_news/common/type/news/res/getSubject.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key}) : super(key: key);
@@ -33,11 +37,11 @@ class _MainPageState extends State<MainPage> {
   TypeGetAllChannelsResponse _newsChannels;
   int _curSelectCode = 9;
   int _channelType = 1;
-
+  AppState appState;
   @override
   void initState() {
     super.initState();
-    print('-----initState----');
+    print('main init');
     _controller = EasyRefreshController();
     _loadAllData();
     _loadLatestWithDiskCache();
@@ -82,6 +86,7 @@ class _MainPageState extends State<MainPage> {
   }) async {
     _curSelectCode = categorycode;
     _channelType = channelType;
+    appState.setChannelData(code: _curSelectCode, type: _channelType);
     _hotNewsList = await NewsApi.getHotNews(context: context, cacheDisk: true);
 
     _subjectList = await NewsApi.getSubject(
@@ -118,7 +123,16 @@ class _MainPageState extends State<MainPage> {
     if (_curSelectCode == 9 && this._channelType == 1) {
       return this._hotNewsList == null
           ? Container()
-          : recommendWidget(this._hotNewsList);
+          : recommendWidget(
+              this._hotNewsList,
+              (item) {
+                appState.setDetailList(item);
+                Application.router.navigateTo(
+                  context,
+                  '/details/${item['news_id']}',
+                );
+              },
+            );
     } else {
       return this._newsPageList == null
           ? Container()
@@ -137,7 +151,16 @@ class _MainPageState extends State<MainPage> {
   Widget _buildNewsList() {
     return _newsPageList == null
         ? Container(height: duSetHeight(161 * 5 + 100.0))
-        : newsWidget(this._newsPageList);
+        : newsWidget(
+            this._newsPageList,
+            (item) {
+              appState.setDetailList(item);
+              Application.router.navigateTo(
+                context,
+                '/details/${item['news_id']}',
+              );
+            },
+          );
   }
 
   // 订阅
@@ -147,6 +170,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    appState = Provider.of<AppState>(context);
     return _newsPageList == null
         ? cardListSkeleton()
         : EasyRefresh(

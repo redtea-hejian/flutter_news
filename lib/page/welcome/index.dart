@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news/common/router/application.dart';
 import 'package:flutter_news/common/utils/index.dart';
 import 'package:flutter_news/common/values/index.dart';
 
@@ -97,10 +98,7 @@ class _WelcomePageState extends State<WelcomePage> {
               MaterialStateProperty.all<Color>(AppColors.primaryElementText),
         ),
         onPressed: () {
-          Navigator.pushNamed(
-            context,
-            "/sign-in",
-          );
+          Application.router.navigateTo(context, '/signIn');
         },
       ),
     );

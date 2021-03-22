@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news/common/router/application.dart';
 import 'package:flutter_news/common/type/index.dart';
 import 'package:flutter_news/common/utils/index.dart';
 import 'package:flutter_news/common/values/index.dart';
@@ -6,8 +7,11 @@ import 'package:flutter_news/common/widgets/index.dart';
 import 'package:flutter_news/global.dart';
 
 class SignInPage extends StatefulWidget {
-  SignInPage({Key key}) : super(key: key);
-
+  // SignInPage({Key key}) : super(key: key);
+  final void Function(bool isLoggedIn) onLoginResult;
+  final bool showBackButton;
+  const SignInPage({Key key, this.onLoginResult, this.showBackButton = true})
+      : super(key: key);
   @override
   _SignInPageState createState() => _SignInPageState();
 }
@@ -20,10 +24,7 @@ class _SignInPageState extends State<SignInPage> {
 
   // 跳转 注册界面
   _handleNavSignUp() {
-    Navigator.pushNamed(
-      context,
-      "/sign-up",
-    );
+    Application.router.navigateTo(context, '/signUp');
   }
 
   // 执行登录操作
@@ -42,7 +43,7 @@ class _SignInPageState extends State<SignInPage> {
     // 写本地 access_token , 不写全局，业务：离线登录
     Global.saveProfile(result);
     // 全局数据 gUser
-    Navigator.pushNamed(context, '/app');
+    Application.router.navigateTo(context, '/');
   }
 
   ///////////////////////////////

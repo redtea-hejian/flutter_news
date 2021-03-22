@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_news/common/router/application.dart';
 import 'package:flutter_news/common/utils/index.dart';
 import 'package:flutter_news/common/values/index.dart';
 import 'package:flutter_news/global.dart';
@@ -15,6 +16,5 @@ Future deleteAuthentication() async {
 
 Future goLoginPage(BuildContext context) async {
   await deleteAuthentication();
-  Navigator.pushNamedAndRemoveUntil(
-      context, '/sign-in', (Route<dynamic> route) => false);
+  Application.router.navigateTo(context, '/signIn');
 }
